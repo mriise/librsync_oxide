@@ -47,12 +47,12 @@ fn insert_command(len: u64, out: &mut impl Write) -> io::Result<()> {
     assert!(len != 0);
     if len <= 64 {
         out.write_all(&[RS_OP_LITERAL_1 + (len - 1) as u8])?;
-    } else if len <= u8::max_value() as u64 {
+    } else if len <= u8::MAX as u64 {
         out.write_all(&[RS_OP_LITERAL_N1, len as u8])?;
-    } else if len <= u16::max_value() as u64 {
+    } else if len <= u16::MAX as u64 {
         let [v1, v2] = (len as u16).to_be_bytes();
         out.write_all(&[RS_OP_LITERAL_N2, v1, v2])?;
-    } else if len <= u32::max_value() as u64 {
+    } else if len <= u32::MAX as u64 {
         let [v1, v2, v3, v4] = (len as u32).to_be_bytes();
         out.write_all(&[RS_OP_LITERAL_N4, v1, v2, v3, v4])?;
     } else {
@@ -65,11 +65,11 @@ fn insert_command(len: u64, out: &mut impl Write) -> io::Result<()> {
 
 fn copy_command(offset: u64, len: u64, out: &mut impl Write) -> io::Result<()> {
     fn u64_size_class(val: u64) -> u8 {
-        if val <= u8::max_value() as u64 {
+        if val <= u8::MAX as u64 {
             0
-        } else if val <= u16::max_value() as u64 {
+        } else if val <= u16::MAX as u64 {
             1
-        } else if val <= u32::max_value() as u64 {
+        } else if val <= u32::MAX as u64 {
             2
         } else {
             3
@@ -84,11 +84,11 @@ fn copy_command(offset: u64, len: u64, out: &mut impl Write) -> io::Result<()> {
     }
 
     fn write_varint(val: u64, out: &mut impl Write) -> io::Result<()> {
-        if val <= u8::max_value() as u64 {
+        if val <= u8::MAX as u64 {
             out.write_all(&[val as u8])?;
-        } else if val <= u16::max_value() as u64 {
+        } else if val <= u16::MAX as u64 {
             out.write_all(&(val as u16).to_be_bytes())?;
-        } else if val <= u32::max_value() as u64 {
+        } else if val <= u32::MAX as u64 {
             out.write_all(&(val as u32).to_be_bytes())?;
         } else {
             out.write_all(&val.to_be_bytes())?;
@@ -116,8 +116,8 @@ impl OutputState {
             return Ok(());
         }
         if let Some((offset, len)) = self.queued_copy {
-            copy_command(offset as u64, len as u64, &mut out)?;
-            self.emitted += len as usize;
+            copy_command(offset, len as u64, &mut out)?;
+            self.emitted += len;
         }
         if self.emitted < until {
             let to_emit = &data[self.emitted..until];
@@ -194,7 +194,7 @@ pub fn diff(
             // if we detect too many CRC collisions, blacklist the CRC to avoid DoS
             if collisions
                 .get(&crc)
-                .map_or(true, |&count| count < MAX_CRC_COLLISIONS)
+                .is_none_or(|&count| count < MAX_CRC_COLLISIONS)
             {
                 if let Some(blocks) = signature.blocks.get(&crc) {
                     let digest = {
@@ -203,7 +203,7 @@ pub fn diff(
                             SignatureType::Md4 => o[..16]
                                 .copy_from_slice(&md4(&data[here..here + block_size as usize])),
                             SignatureType::Blake2 => o.copy_from_slice(
-                                &blake2b_simd::Params::new()
+                                blake2b_simd::Params::new()
                                     .hash_length(32)
                                     .hash(&data[here..here + block_size as usize])
                                     .as_bytes(),

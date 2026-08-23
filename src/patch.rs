@@ -150,7 +150,7 @@ pub fn apply_limited(
     macro_rules! safe_cast {
         ($val:expr, $ty:ty, $err:expr) => {{
             let val = $val;
-            if val as u64 > <$ty>::max_value() as u64 {
+            if val as u64 > <$ty>::MAX as u64 {
                 return Err($err);
             }
             val as $ty
@@ -190,7 +190,7 @@ pub fn apply_limited(
                         usize,
                         ApplyError::OutputLimit {
                             what: "literal",
-                            wanted: usize::max_value(),
+                            wanted: usize::MAX,
                             available: limit,
                         }
                     )
@@ -237,5 +237,5 @@ pub fn apply_limited(
 /// large output which can exhaust available memory. Use [apply_limited()] instead to set an upper
 /// bound on the size of `out`.
 pub fn apply(base: &[u8], delta: &[u8], out: &mut impl Write) -> Result<(), ApplyError> {
-    apply_limited(base, delta, out, usize::max_value())
+    apply_limited(base, delta, out, usize::MAX)
 }

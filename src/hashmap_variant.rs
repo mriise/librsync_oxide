@@ -17,23 +17,18 @@ use std::{collections::HashMap, hash::Hash, mem};
 /// With this the current use case of `SecondLayerMap<&[u8], u32>` takes up 24 bytes on 64-bit
 /// systems while `HashMap<&[u8], u32>` takes 48. Beyond that a [`SecondLayerMap`] consists of just
 /// a match and an if
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Default, Eq, PartialEq)]
 pub enum SecondLayerMap<K, V>
 where
     K: Eq + Hash,
 {
+    #[default]
     Empty,
     Single(K, V),
+    // The Box is intentional: it keeps the enum (and so every first-layer entry) small, since
+    // this variant is rare. See the type-level docs.
+    #[allow(clippy::box_collection)]
     TwoOrMore(Box<HashMap<K, V>>),
-}
-
-impl<K, V> Default for SecondLayerMap<K, V>
-where
-    K: Eq + Hash,
-{
-    fn default() -> Self {
-        Self::Empty
-    }
 }
 
 impl<K, V> SecondLayerMap<K, V>

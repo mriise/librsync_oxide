@@ -170,7 +170,7 @@ pub fn md4(data: &[u8]) -> [u8; 16] {
 mod simd {
     #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
     pub const MAX_LANES: usize = 8;
-    #[cfg(any(target_arch = "aarch64"))]
+    #[cfg(target_arch = "aarch64")]
     pub const MAX_LANES: usize = 4;
     #[cfg(not(any(target_arch = "x86", target_arch = "x86_64", target_arch = "aarch64")))]
     pub const MAX_LANES: usize = 0;
@@ -535,7 +535,7 @@ fn tests() {
             );
         }
         // make sure it also works for unaligned input
-        if msg.len() > 0 {
+        if !msg.is_empty() {
             let tail = &msg[1..];
             let tail_md4 = md4(tail);
             if let Some(simd_impl) = simd::Md4xN::select() {
