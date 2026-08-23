@@ -1,20 +1,36 @@
 name: Rust
 
-on: [push]
+on:
+  push:
+  pull_request:
 
 env:
+  CARGO_TERM_COLOR: always
   # make cargo magically go faster
   CARGO_REGISTRIES_CRATES_IO_PROTOCOL: sparse
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: rustfmt
+      run: cargo fmt --all -- --check
+    - name: rustdoc
+      run: cargo doc --no-deps --locked
+      env:
+        RUSTDOCFLAGS: -D warnings
+
   build:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
     - name: Run tests
-      run: cargo test --all-targets
+      run: cargo test --all-targets --locked
+    - name: Run doctests
+      run: cargo test --doc --locked
     - name: Run tests in release mode
-      run: cargo test --all-targets --release
+      run: cargo test --all-targets --release --locked
 
   build-i686:
     runs-on: ubuntu-latest
@@ -23,9 +39,9 @@ jobs:
     - name: Install cross
       run: cargo install cross --git https://github.com/cross-rs/cross
     - name: Run tests (i686)
-      run: cross test --all-targets --target i686-unknown-linux-gnu
+      run: cross test --all-targets --target i686-unknown-linux-gnu --locked
     - name: Run tests in release mode (i686)
-      run: cross test --all-targets --target i686-unknown-linux-gnu --release
+      run: cross test --all-targets --target i686-unknown-linux-gnu --release --locked
 
   build-aarch64:
     runs-on: ubuntu-latest
@@ -34,13 +50,13 @@ jobs:
     - name: Install cross
       run: cargo install cross --git https://github.com/cross-rs/cross
     - name: Run tests (aarch64)
-      run: cross test --all-targets --target aarch64-unknown-linux-gnu
+      run: cross test --all-targets --target aarch64-unknown-linux-gnu --locked
     - name: Run tests in release mode (aarch64)
-      run: cross test --all-targets --target aarch64-unknown-linux-gnu --release
+      run: cross test --all-targets --target aarch64-unknown-linux-gnu --release --locked
 
   fuzzer:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
     - name: Build fuzzer
-      run: cd fuzz; cargo test
+      run: cd fuzz; cargo test --locked
