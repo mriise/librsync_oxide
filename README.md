@@ -1,4 +1,4 @@
-# fast\_rsync
+# librsync\_oxide
 
 [![Crates.io](https://img.shields.io/crates/v/librsync_oxide.svg)](https://crates.io/crates/librsync_oxide)
 [![Build Status](https://github.com/mriise/librsync_xodie/workflows/Rust/badge.svg)](https://github.com/mriise/librsync_xodie/actions)
