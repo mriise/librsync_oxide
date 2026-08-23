@@ -15,7 +15,7 @@ use std::io;
 
 fn random_block(len: usize) -> Vec<u8> {
     use rand::RngCore;
-    let mut v = vec![0; len];
+    let mut v: Vec<u8> = vec![0; len];
     rand::thread_rng().fill_bytes(&mut v);
     v
 }
