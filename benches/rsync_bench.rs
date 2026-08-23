@@ -8,7 +8,7 @@ mod crc;
 
 use crate::crc::Crc;
 use criterion::{black_box, BenchmarkId, Criterion, Throughput};
-use fast_rsync::{apply_limited, diff, Signature, SignatureOptions};
+use librsync_oxide::{apply_limited, diff, Signature, SignatureOptions};
 use std::io;
 
 fn random_block(len: usize) -> Vec<u8> {
@@ -43,7 +43,7 @@ fn calculate_signature(c: &mut Criterion) {
     group.throughput(Throughput::Bytes(data.len() as u64));
     group.sample_size(20);
     group.bench_with_input(
-        BenchmarkId::new("fast_rsync::Signature::calculate", data.len()),
+        BenchmarkId::new("librsync_oxide::Signature::calculate", data.len()),
         &data,
         |b, data| {
             b.iter(|| {
@@ -52,7 +52,7 @@ fn calculate_signature(c: &mut Criterion) {
                     SignatureOptions {
                         block_size: 4096,
                         crypto_hash_size: 8,
-                        signature_type: fast_rsync::SignatureType::Md4,
+                        signature_type: librsync_oxide::SignatureType::Md4,
                     },
                 )
                 .into_serialized();
@@ -92,14 +92,14 @@ fn bench_diff(
         SignatureOptions {
             block_size: 4096,
             crypto_hash_size: 8,
-            signature_type: fast_rsync::SignatureType::Md4,
+            signature_type: librsync_oxide::SignatureType::Md4,
         },
     )
     .into_serialized();
     let mut group = c.benchmark_group(name);
     group.sample_size(15);
     group.bench_with_input(
-        BenchmarkId::new("fast_rsync::diff", new_data.len()),
+        BenchmarkId::new("librsync_oxide::diff", new_data.len()),
         new_data,
         |b, new_data| {
             b.iter(|| {
@@ -165,7 +165,7 @@ fn apply_delta(c: &mut Criterion) {
             SignatureOptions {
                 block_size: 4096,
                 crypto_hash_size: 8,
-                signature_type: fast_rsync::SignatureType::Md4,
+                signature_type: librsync_oxide::SignatureType::Md4,
             },
         )
         .index(),
@@ -175,7 +175,7 @@ fn apply_delta(c: &mut Criterion) {
     .unwrap();
     let mut group = c.benchmark_group("apply");
     group.bench_with_input(
-        BenchmarkId::new("fast_rsync::apply", new_data.len()),
+        BenchmarkId::new("librsync_oxide::apply", new_data.len()),
         &delta,
         |b, delta| {
             b.iter(|| {

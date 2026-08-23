@@ -156,7 +156,7 @@ impl OutputState {
 /// attempt to reconstruct `data`.
 ///
 /// # Security
-/// Since `fast_rsync` uses the insecure MD4 hash algorithm, the resulting delta must not be
+/// Since `librsync_oxide` uses the insecure MD4 hash algorithm, the resulting delta must not be
 /// trusted to correctly reconstruct `data`. The delta might fail to apply or produce the wrong
 /// data entirely. Always use another mechanism, like a cryptographic hash function, to validate
 /// the final reconstructed data.

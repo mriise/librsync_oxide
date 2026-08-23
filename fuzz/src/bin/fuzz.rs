@@ -1,7 +1,7 @@
 #[macro_use]
 extern crate honggfuzz;
 
-use fast_rsync::{apply_limited, ApplyError};
+use librsync_oxide::{apply_limited, ApplyError};
 use rand::rngs::SmallRng;
 use rand::{RngCore, SeedableRng};
 use std::io::Cursor;
@@ -27,13 +27,13 @@ fn main() {
 
             let mut librsync_data_cursor = Cursor::new(&mut librsync_data[..]);
             let mut librsync_delta_cursor = &delta[..];
-            let fast_rsync_result = apply_limited(base_data, delta, &mut out_data, MAX_OUT);
+            let librsync_oxide_result = apply_limited(base_data, delta, &mut out_data, MAX_OUT);
             let librsync_result = librsync::Patch::with_buf_read(
                 &mut Cursor::new(base_data),
                 &mut librsync_delta_cursor,
             )
             .and_then(|mut job| Ok(std::io::copy(&mut job, &mut librsync_data_cursor)?));
-            match fast_rsync_result {
+            match librsync_oxide_result {
                 Ok(()) => {
                     assert!(out_data.len() <= MAX_OUT);
                     assert!(librsync_result.is_ok());
@@ -52,7 +52,7 @@ fn main() {
                 }
                 Err(e) => {
                     // librsync can return success if there is still unconsumed
-                    // input, but `fast_rsync` considers that an error. Account for
+                    // input, but `librsync_oxide` considers that an error. Account for
                     // that.
                     assert!(
                         librsync_result.is_err() || !librsync_delta_cursor.is_empty(),

@@ -1,9 +1,9 @@
 # fast\_rsync
 
-[![Crates.io](https://img.shields.io/crates/v/fast_rsync.svg)](https://crates.io/crates/fast_rsync)
-[![Build Status](https://github.com/dropbox/fast_rsync/workflows/Rust/badge.svg)](https://github.com/dropbox/fast_rsync/actions)
+[![Crates.io](https://img.shields.io/crates/v/librsync_oxide.svg)](https://crates.io/crates/librsync_oxide)
+[![Build Status](https://github.com/mriise/librsync_xodie/workflows/Rust/badge.svg)](https://github.com/mriise/librsync_xodie/actions)
 
-[Documentation](https://docs.rs/fast_rsync)
+[Documentation](https://docs.rs/librsync_oxide)
 
 A faster implementation of [librsync](https://github.com/librsync/librsync) in
 pure Rust, using SIMD operations where available.
@@ -34,79 +34,24 @@ of some file `foo`, and host B would like to acquire A's copy.
 3. Host B attempts to `apply` the delta to `foo_B`. The resulting data is
    _probably_ (\*) equal to `foo_A`.
 
-(\*) Note the caveat. `fast_rsync` can use the insecure MD4 algorithm.
+(\*) Note the caveat. `librsync_oxide` can use the insecure MD4 algorithm.
 Therefore, you should not always trust that `diff` will produce a correct delta. You
 must always verify the integrity of the output of `apply` using some other
 mechanism, such as a cryptographic hash function like SHA-256 or by using blake2 signatures.
 
 ## Benchmarks
-These were taken on a noisy laptop with a `Intel(R) Core(TM) i7-6820HQ CPU @
-2.70GHz`. The source code is available in `benches/rsync_bench.rs`.
 
-### Signature computation
-```
-calculate_signature/fast_rsync::Signature::calculate/4194304
-                        time:   [1.0639 ms 1.0696 ms 1.0775 ms]
-                        thrpt:  [3.6253 GiB/s 3.6519 GiB/s 3.6716 GiB/s]
-calculate_signature/librsync::whole::signature/4194304
-                        time:   [5.8013 ms 5.8521 ms 5.9235 ms]
-                        thrpt:  [675.28 MiB/s 683.51 MiB/s 689.50 MiB/s]
-```
-
-`fast_rsync` is substantially faster than `librsync` at calculating signatures,
-thanks to SIMD optimizations. The benchmark processor has AVX2 and sees a 6X
-speedup. Processors with only SSE2 (or with less fully-featured AVX) see a
-smaller speedup, about 3-4X.
-
-Note that `fast_rsync` will detect available vector extensions at runtime and
-use them as appropriate; `-C target-cpu` is not required.
-
-### Computing deltas
-```
-diff (64KB edit)/fast_rsync::diff/4194304
-                        time:   [6.8681 ms 7.0596 ms 7.1953 ms]
-diff (64KB edit)/librsync::whole::delta/4194304
-                        time:   [7.4044 ms 7.4649 ms 7.5222 ms]
-```
-
-When comparing similar files, `fast_rsync` is mostly bound by the speed of
-single-block MD4 hashing, so it is not much faster than `librsync`.
+Performance is hardware-dependent (SIMD width, cache sizes), so rather than
+publish numbers we encourage you to run the benchmarks yourself:
 
 ```
-diff (random)/fast_rsync::diff/4194304
-                        time:   [37.779 ms 38.317 ms 38.607 ms]
-diff (random)/librsync::whole::delta/4194304
-                        time:   [41.983 ms 42.758 ms 43.259 ms]
+cargo bench
 ```
 
-When comparing completely different files, `fast_rsync` is mostly bound by the
-speed of hashmap lookups. Here, `fast_rsync` enjoys a slight advantage because
-of Rust's fast built-in `HashMap` implementation.
-
-```
-diff (pathological)/fast_rsync::diff/16384
-                        time:   [6.0792 ms 6.2550 ms 6.3666 ms]
-diff (pathological)/librsync::whole::delta/16384
-                        time:   [50.082 ms 50.185 ms 50.376 ms]
-diff (pathological)/fast_rsync::diff/4194304
-                        time:   [32.690 ms 32.986 ms 33.171 ms]
-```
-
-`fast_rsync` is able to detect pathological cases that involve many checksum
-collisions. Note that the 4MB version of the benchmark is prohibitively slow
-for `librsync` and so its result is not listed.
-
-### Applying deltas
-```
-apply/fast_rsync::apply/4194304
-                        time:   [276.17 us 284.20 us 293.37 us]
-apply/librsync::whole::patch/4194304
-                        time:   [394.21 us 400.30 us 408.79 us]
-```
-
-Applying deltas is quite straightforward and in any case is unlikely to be a
-bottleneck, but `fast_rsync`'s implementation, which is specialized for
-in-memory buffers, enjoys a mild speedup.
+The benchmarks live in `benches/rsync_bench.rs` and compare signature
+calculation, delta computation and delta application against `librsync`.
+Note that `librsync_oxide` detects available vector extensions at runtime and
+uses them as appropriate; `-C target-cpu` is not required.
 
 ## Contributing
 Pull requests are welcome! We ask that you agree to [Dropbox's Contributor

@@ -178,19 +178,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "11157ac094ffbdde99aa67b23417ebdd801842852b500e395a45a9c0aac03e4a"
 
 [[package]]
-name = "fast_rsync"
-version = "0.2.0"
-dependencies = [
- "arrayref",
- "blake2b_simd",
- "criterion",
- "librsync",
- "quickcheck",
- "quickcheck_macros",
- "rand",
-]
-
-[[package]]
 name = "getrandom"
 version = "0.2.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -265,6 +252,19 @@ source = "git+https://github.com/goffrie/librsync-rs?rev=e2e4b06022d889e020c439f
 dependencies = [
  "cc",
  "libc",
+]
+
+[[package]]
+name = "librsync_oxide"
+version = "0.2.0"
+dependencies = [
+ "arrayref",
+ "blake2b_simd",
+ "criterion",
+ "librsync",
+ "quickcheck",
+ "quickcheck_macros",
+ "rand",
 ]
 
 [[package]]

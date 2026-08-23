@@ -15,23 +15,48 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a4c527152e37cf757a3f78aae5a06fbeefdb07ccc535c980a3208ee3060dd544"
 
 [[package]]
+name = "arrayvec"
+version = "0.7.8"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d3fb67a6e08acf24fdeccbac2cb6ac4305825bd1f117462e0e6f2f193345ad56"
+
+[[package]]
+name = "blake2b_simd"
+version = "1.0.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3560a7b1951efe814fcd721938313adc56753ca39f4b23847d7e9a2402f5dbff"
+dependencies = [
+ "arrayvec",
+ "constant_time_eq",
+]
+
+[[package]]
+name = "cc"
+version = "1.4.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0ad534f4357a5264cce5019c989cf66a4f0dc4e0d1b1d15f8aacec0ff7360273"
+dependencies = [
+ "find-msvc-tools",
+ "shlex",
+]
+
+[[package]]
 name = "cfg-if"
 version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
 
 [[package]]
-name = "fast_rsync"
-version = "0.1.4"
-dependencies = [
- "arrayref",
-]
+name = "constant_time_eq"
+version = "0.4.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3d52eff69cd5e647efe296129160853a42795992097e8af39800e1060caeea9b"
 
 [[package]]
-name = "gcc"
-version = "0.3.55"
+name = "find-msvc-tools"
+version = "0.1.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8f5f3913fa0bfe7ee1fd8248b6b9f42a5af4b9d65ec2dd2c3c26132b950ecfc2"
+checksum = "d45db016d36b838f563236e9193d0ee6ce38f3f68b6c94e914b4929c96bbb890"
 
 [[package]]
 name = "getrandom"
@@ -69,8 +94,8 @@ checksum = "efaa7b300f3b5fe8eb6bf21ce3895e1751d9665086af2d64b42f19701015ff4f"
 
 [[package]]
 name = "librsync"
-version = "0.2.0"
-source = "git+https://github.com/goffrie/librsync-rs?rev=ab9c427b5b20624fe533ad0247fe0f9c3460245e#ab9c427b5b20624fe533ad0247fe0f9c3460245e"
+version = "0.2.1"
+source = "git+https://github.com/goffrie/librsync-rs?rev=e2e4b06022d889e020c439f2dc92ea2fec0e483e#e2e4b06022d889e020c439f2dc92ea2fec0e483e"
 dependencies = [
  "libc",
  "librsync-sys",
@@ -78,11 +103,19 @@ dependencies = [
 
 [[package]]
 name = "librsync-sys"
-version = "0.1.1"
-source = "git+https://github.com/goffrie/librsync-rs?rev=ab9c427b5b20624fe533ad0247fe0f9c3460245e#ab9c427b5b20624fe533ad0247fe0f9c3460245e"
+version = "0.1.2"
+source = "git+https://github.com/goffrie/librsync-rs?rev=e2e4b06022d889e020c439f2dc92ea2fec0e483e#e2e4b06022d889e020c439f2dc92ea2fec0e483e"
 dependencies = [
- "gcc",
+ "cc",
  "libc",
+]
+
+[[package]]
+name = "librsync_oxide"
+version = "0.2.0"
+dependencies = [
+ "arrayref",
+ "blake2b_simd",
 ]
 
 [[package]]
@@ -135,11 +168,17 @@ dependencies = [
 name = "rsync-fuzz"
 version = "0.1.0"
 dependencies = [
- "fast_rsync",
  "honggfuzz",
  "librsync",
+ "librsync_oxide",
  "rand",
 ]
+
+[[package]]
+name = "shlex"
+version = "2.0.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f8fadd59c855ef2080decdef8ff161eb6661b86933c9d82e5ba29dc602a55aba"
 
 [[package]]
 name = "wasi"

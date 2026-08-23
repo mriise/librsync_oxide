@@ -1,11 +1,11 @@
 [package]
-name = "fast_rsync"
+name = "librsync_oxide"
 version = "0.2.0"
 authors = ["Dropbox Engineering", "bacher09, Artyom Pavlov (RustCrypto/hashes/MD4)"]
 license = "Apache-2.0"
 description = "An optimized implementation of librsync in pure Rust."
 readme = "README.md"
-repository = "https://github.com/dropbox/fast_rsync"
+repository = "https://github.com/mriise/librsync_xodie"
 keywords = ["rsync"]
 edition = "2018"
 
