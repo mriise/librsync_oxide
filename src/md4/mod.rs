@@ -1,5 +1,5 @@
 //! A SIMD-ized implementation of MD4 designed to hash many blocks in parallel.
-//! The base implementation is derived from https://github.com/RustCrypto/hashes/tree/master/md4.
+//! The base implementation is derived from <https://github.com/RustCrypto/hashes/tree/master/md4>.
 #![allow(clippy::ptr_offset_with_cast)]
 
 use arrayref::{array_mut_ref, array_ref, array_refs, mut_array_refs};
