@@ -113,12 +113,12 @@ accepted.
   librsync's job API.
 
 `librsync_oxide` is compatible with **librsync 2.2.1**. The test suite
-verifies all of the above against the real librsync library (the
-[`librsync`](https://github.com/goffrie/librsync-rs) crate used by the tests
-vendors librsync commit `f5dc814`, which is 2.2.1 plus the unreleased 2.2.2
-fixes, none of which touch the wire formats). The rollsum signature and delta
-formats have not changed since librsync 2.0, and they are what `rdiff` 2.x
-reads and writes with `-R rollsum`.
+verifies all of the above against the real librsync library, through the
+[`librsync`](https://crates.io/crates/librsync) crate (0.2.5), which builds a
+vendored librsync 2.2.2 development snapshot (2.2.1 plus unreleased fixes,
+none of which touch the wire formats). The rollsum signature and delta formats
+have not changed since librsync 2.0, and they are what `rdiff` 2.x reads and
+writes with `-R rollsum`.
 
 ## Benchmarks
 

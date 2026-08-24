@@ -9,8 +9,6 @@ mod crc;
 use crate::crc::Crc;
 use criterion::{black_box, BenchmarkId, Criterion, Throughput};
 use librsync_oxide::{apply_limited, diff, Signature, SignatureOptions};
-// The librsync comparison benchmarks need the C library, which does not build with MSVC.
-#[cfg(not(windows))]
 use std::io;
 
 fn random_block(len: usize) -> Vec<u8> {
@@ -61,7 +59,6 @@ fn calculate_signature(c: &mut Criterion) {
             })
         },
     );
-    #[cfg(not(windows))]
     group.bench_with_input(
         BenchmarkId::new("librsync::whole::signature", data.len()),
         &data,
@@ -83,7 +80,6 @@ fn calculate_signature(c: &mut Criterion) {
     group.finish();
 }
 
-#[cfg_attr(windows, allow(unused_variables))] // allow_librsync is only read when librsync is compiled in
 fn bench_diff(
     c: &mut Criterion,
     name: &str,
@@ -115,7 +111,6 @@ fn bench_diff(
             })
         },
     );
-    #[cfg(not(windows))]
     if allow_librsync {
         group.bench_with_input(
             BenchmarkId::new("librsync::whole::delta", new_data.len()),
@@ -190,7 +185,6 @@ fn apply_delta(c: &mut Criterion) {
             })
         },
     );
-    #[cfg(not(windows))]
     group.bench_with_input(
         BenchmarkId::new("librsync::whole::patch", new_data.len()),
         &delta,

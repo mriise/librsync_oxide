@@ -87,8 +87,8 @@ checksum = "efaa7b300f3b5fe8eb6bf21ce3895e1751d9665086af2d64b42f19701015ff4f"
 
 [[package]]
 name = "librsync"
-version = "0.2.1"
-source = "git+https://github.com/goffrie/librsync-rs?rev=e2e4b06022d889e020c439f2dc92ea2fec0e483e#e2e4b06022d889e020c439f2dc92ea2fec0e483e"
+version = "0.2.5"
+source = "git+https://github.com/mriise/librsync-rs?rev=01e9f02#01e9f0220a780a66db91c8d3bfe5afdb24736eff"
 dependencies = [
  "libc",
  "librsync-sys",
@@ -96,8 +96,8 @@ dependencies = [
 
 [[package]]
 name = "librsync-sys"
-version = "0.1.2"
-source = "git+https://github.com/goffrie/librsync-rs?rev=e2e4b06022d889e020c439f2dc92ea2fec0e483e#e2e4b06022d889e020c439f2dc92ea2fec0e483e"
+version = "0.1.3"
+source = "git+https://github.com/mriise/librsync-rs?rev=01e9f02#01e9f0220a780a66db91c8d3bfe5afdb24736eff"
 dependencies = [
  "cc",
  "libc",
@@ -105,7 +105,7 @@ dependencies = [
 
 [[package]]
 name = "librsync_oxide"
-version = "0.2.0"
+version = "0.3.0"
 dependencies = [
  "arrayref",
  "blake2b_simd",
