@@ -12,5 +12,5 @@ honggfuzz = "0.5.54"
 # base, a hang on zero-length copies, and assert aborts). The fuzzer feeds garbage deltas to
 # librsync, so it needs them. Switch back to the crates.io release once
 # https://github.com/mbrt/librsync-rs/pull/28 is merged and published.
-librsync = { git = "https://github.com/mriise/librsync-rs", rev = "01e9f02", default-features = false }
+librsync = { git = "https://github.com/mriise/librsync-rs", rev = "96c236c", default-features = false }
 rand = { version = "0.8", features = ["small_rng"] }
