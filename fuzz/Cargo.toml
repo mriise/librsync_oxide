@@ -7,10 +7,6 @@ publish = false
 
 [dependencies]
 librsync_oxide = { path = ".." }
-honggfuzz = "0.5.54"
-# librsync 0.2.5 plus fixes for malformed deltas (garbage output on copy past the end of the
-# base, a hang on zero-length copies, and assert aborts). The fuzzer feeds garbage deltas to
-# librsync, so it needs them. Switch back to the crates.io release once
-# https://github.com/mbrt/librsync-rs/pull/28 is merged and published.
-librsync = { git = "https://github.com/mriise/librsync-rs", rev = "96c236c", default-features = false }
+honggfuzz = "0.5.62"
+librsync = { version = "0.2.6", default-features = false }
 rand = { version = "0.8", features = ["small_rng"] }
